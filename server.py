@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Major part of this file is part of paramiko examples.
@@ -221,7 +221,7 @@ if __name__ == '__main__':
 
             while True:
                 time.sleep(0.01)
-                server_data = ""
+                server_data = bytes()
                 if remote_chan.closed or chan.closed:
                     break
                 while True:
@@ -230,9 +230,9 @@ if __name__ == '__main__':
                     if remote_chan.recv_ready():
                         server_data += remote_chan.recv(1024)
                     else:
-                        if server_data == "":
+                        if server_data == bytes():
                             break
-                        info("new response from server : " + repr(server_data))
+                        info("new response from server : " + repr(server_data.decode(sys.getdefaultencoding())))
                         chan.send(server_data)
                         if args.asciinema:
                             now = datetime.datetime.now()
@@ -241,24 +241,24 @@ if __name__ == '__main__':
                             asciinema_data += '      %d.%06d,\n' % (
                                 delta.seconds, delta.microseconds)
                             asciinema_data += '      ' + \
-                                json.dumps(server_data)+'\n'
+                                json.dumps(server_data.decode(sys.getdefaultencoding()))+'\n'
                             asciinema_data += '    ],\n'
                             last_time = datetime.datetime.now()
-                        server_data = ""
+                        server_data = bytes()
                         time.sleep(0.01)
                         break
-                client_data = ""
+                client_data = bytes()
                 while True:
                     if remote_chan.closed or chan.closed:
                         break
                     if chan.recv_ready():
                         client_data += chan.recv(1024)
                     else:
-                        if client_data == "":
+                        if client_data == bytes():
                             break
-                        info("new message from client : " + repr(client_data))
+                        info("new message  from client : " + repr(client_data.decode(sys.getdefaultencoding())))
                         remote_chan.send(client_data)
-                        client_data = ""
+                        client_data = bytes()
                         time.sleep(0.01)
                         break
             remote_chan.close()

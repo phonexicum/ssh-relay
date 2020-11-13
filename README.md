@@ -1,3 +1,5 @@
+fork info: adapted this to python3
+
 # ssh-relay
 
 ## server
